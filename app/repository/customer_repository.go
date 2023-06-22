@@ -58,3 +58,13 @@ func (c *customerRepository) FindAll(ctx context.Context) ([]model.CustomerModel
 
 	return customers, meta, nil
 }
+
+func (c *customerRepository) FindOne(ctx context.Context, id string) (*model.CustomerModel, error) {
+	var customer model.CustomerModel
+	filter := bson.M{"id": id}
+	if err := c.customerCollection.FindOne(ctx, filter).Decode(&customer); err != nil {
+		return nil, err
+	}
+
+	return &customer, nil
+}

@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type customerDelivery struct {
@@ -24,6 +25,7 @@ func NewCustomerDelivery(router fiber.Router, service service.CustomerServiceInt
 
 	router.Post("/customer", handler.Create)
 	router.Get("/customer", handler.FindAll)
+	router.Get("/customer/:id", handler.FindOne)
 }
 
 func (c *customerDelivery) Create(ctx *fiber.Ctx) error {
@@ -75,6 +77,41 @@ func (c *customerDelivery) FindAll(ctx *fiber.Ctx) error {
 		Message: "get all customers",
 		Data:    customers,
 		Meta:    &meta,
+	}
+
+	return ctx.JSON(response)
+}
+
+func (c *customerDelivery) FindOne(ctx *fiber.Ctx) error {
+	contx, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
+	defer cancel()
+
+	id := ctx.Params("id")
+
+	var response model.Response
+
+	customer, err := c.service.FindOne(contx, id)
+	if err != nil {
+		// if error is not documents found
+		if err == mongo.ErrNoDocuments {
+			response = model.Response{
+				Success: true,
+				Message: "get customer by id",
+			}
+			return ctx.JSON(response)
+		}
+		// response for exact error
+		response = model.Response{
+			Success: false,
+			Error:   err.Error(),
+		}
+		return helper.APIResponse(ctx, fiber.StatusInternalServerError, response)
+	}
+
+	response = model.Response{
+		Success: true,
+		Message: "get customer by id",
+		Data:    customer,
 	}
 
 	return ctx.JSON(response)

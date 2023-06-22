@@ -31,3 +31,9 @@ func (c *customerService) FindAll(ctx context.Context) ([]model.CustomerModel, m
 
 	return customers, meta, err
 }
+
+func (c *customerService) FindOne(ctx context.Context, id string) (*model.CustomerModel, error) {
+	customer, err := c.repo.FindOne(ctx, id)
+
+	return customer, err
+}

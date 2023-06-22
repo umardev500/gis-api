@@ -18,18 +18,18 @@ type District struct {
 }
 
 type CustomerModel struct {
-	ID          int      `bson:"id"`
-	Name        string   `bson:"name"`
-	Phone       string   `bson:"phone"`
-	Province    Origin   `bson:"province"`
-	City        Regency  `bson:"city"`
-	District    District `bson:"district"`
-	Longitude   float64  `bson:"longitude"`
-	Latitude    float64  `bson:"latitude"`
-	Picture     string   `bson:"picture"`
-	Thumbnail   string   `bson:"thumbnail"`
-	Description string   `bson:"description"`
-	CreatedAt   int64    `bson:"createdAt"`
+	ID          string   `bson:"id" json:"id"`
+	Name        string   `bson:"name" json:"name"`
+	Phone       string   `bson:"phone" json:"phone"`
+	Province    Origin   `bson:"province" json:"province"`
+	City        Regency  `bson:"city" json:"city"`
+	District    District `bson:"district" json:"district"`
+	Longitude   float64  `bson:"longitude" json:"longitude"`
+	Latitude    float64  `bson:"latitude" json:"latitude"`
+	Picture     string   `bson:"picture" json:"picture"`
+	Thumbnail   string   `bson:"thumbnail" json:"thumbnail"`
+	Description string   `bson:"description" json:"description"`
+	CreatedAt   int64    `bson:"createdAt" json:"createdAt"`
 }
 
 type CustomerRequestPayload struct {
