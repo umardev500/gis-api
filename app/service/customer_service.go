@@ -26,8 +26,8 @@ func (c *customerService) Create(ctx context.Context, payload model.CustomerRequ
 	return err
 }
 
-func (c *customerService) FindAll(ctx context.Context) ([]model.CustomerModel, model.Meta, error) {
-	customers, meta, err := c.repo.FindAll(ctx)
+func (c *customerService) FindAll(ctx context.Context, findMeta model.FindMetaRequest) ([]model.CustomerModel, model.Meta, error) {
+	customers, meta, err := c.repo.FindAll(ctx, &findMeta)
 
 	return customers, meta, err
 }

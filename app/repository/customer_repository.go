@@ -8,6 +8,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type customerRepository struct {
@@ -29,9 +30,16 @@ func (c *customerRepository) Create(ctx context.Context, payload model.CustomerR
 	return nil
 }
 
-func (c *customerRepository) FindAll(ctx context.Context) ([]model.CustomerModel, model.Meta, error) {
+func (c *customerRepository) FindAll(ctx context.Context, findMeta *model.FindMetaRequest) ([]model.CustomerModel, model.Meta, error) {
 	filter := bson.M{}
-	cur, err := c.customerCollection.Find(ctx, filter)
+	findOptions := options.Find()
+	if findMeta != nil {
+		if findMeta.PerPage != 0 {
+			findOptions.SetLimit(findMeta.PerPage)
+		}
+	}
+
+	cur, err := c.customerCollection.Find(ctx, filter, findOptions)
 	if err != nil {
 		return nil, model.Meta{}, err
 	}

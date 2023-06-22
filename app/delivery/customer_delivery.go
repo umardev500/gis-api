@@ -8,6 +8,7 @@ import (
 	"gis/helper"
 	_ "image/jpeg"
 	_ "image/png"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -63,7 +64,11 @@ func (c *customerDelivery) FindAll(ctx *fiber.Ctx) error {
 
 	var response model.Response
 
-	customers, meta, err := c.service.FindAll(contx)
+	perPage, _ := strconv.Atoi(ctx.Query("per_page", "0"))
+	findMeta := model.FindMetaRequest{
+		PerPage: int64(perPage),
+	}
+	customers, meta, err := c.service.FindAll(contx, findMeta)
 	if err != nil {
 		response = model.Response{
 			Success: false,
