@@ -1,10 +1,9 @@
 package model
 
 type UserModel struct {
-	ID       int
-	Name     string
-	Email    string
-	Username string
-	Password string
-	Role     string
+	ID       int    `bson:"id" json:"id"`
+	Name     string `bson:"name" json:"name"`
+	Username string `bson:"username" json:"username"`
+	Password string `bson:"password" json:"password"`
+	Role     string `bson:"role" json:"role"`
 }
