@@ -46,6 +46,7 @@ func (a *authDelivery) Login(ctx *fiber.Ctx) error {
 		if err == mongo.ErrNoDocuments {
 			response = model.Response{
 				Success: true,
+				Status:  fiber.StatusNotFound,
 				Message: "user not found",
 			}
 			return ctx.Status(fiber.StatusNotFound).JSON(response)
@@ -53,6 +54,7 @@ func (a *authDelivery) Login(ctx *fiber.Ctx) error {
 		// response for exact error
 		response = model.Response{
 			Success: false,
+			Status:  fiber.StatusInternalServerError,
 			Error:   err.Error(),
 		}
 		return helper.APIResponse(ctx, fiber.StatusInternalServerError, response)
@@ -60,6 +62,7 @@ func (a *authDelivery) Login(ctx *fiber.Ctx) error {
 
 	return ctx.JSON(model.Response{
 		Success: true,
+		Status:  fiber.StatusOK,
 		Message: "login success",
 		Data:    user,
 	})

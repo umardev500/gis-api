@@ -6,6 +6,7 @@ type Meta struct {
 
 type Response struct {
 	Success bool        `json:"success"`
+	Status  int64       `json:"status"`
 	Data    interface{} `json:"data,omitempty"`
 	Error   string      `json:"error,omitempty"`
 	Message string      `json:"message,omitempty"`
