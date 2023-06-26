@@ -76,14 +76,6 @@ func (a *authDelivery) Login(ctx *fiber.Ctx) error {
 		return helper.APIResponse(ctx, fiber.StatusInternalServerError, response)
 	}
 
-	cookie := fiber.Cookie{
-		Name:     "token",
-		Value:    *t,
-		HTTPOnly: true,
-	}
-
-	ctx.Cookie(&cookie)
-
 	data := map[string]interface{}{
 		"user":  user,
 		"token": t,

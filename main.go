@@ -23,11 +23,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	app := fiber.New()
-	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
-		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
-		AllowCredentials: true,
-	}))
+	app.Use(cors.New())
 
 	api := app.Group("api")
 
