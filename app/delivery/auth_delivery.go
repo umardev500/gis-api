@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -60,10 +61,38 @@ func (a *authDelivery) Login(ctx *fiber.Ctx) error {
 		return helper.APIResponse(ctx, fiber.StatusInternalServerError, response)
 	}
 
+	// create token
+	t, err := helper.CreateToken(jwt.MapClaims{
+		"exp": time.Now().Add(1 * time.Hour).Unix(),
+	})
+
+	if err != nil {
+
+		response = model.Response{
+			Success: false,
+			Status:  fiber.StatusInternalServerError,
+			Error:   err.Error(),
+		}
+		return helper.APIResponse(ctx, fiber.StatusInternalServerError, response)
+	}
+
+	cookie := fiber.Cookie{
+		Name:     "token",
+		Value:    *t,
+		HTTPOnly: true,
+	}
+
+	ctx.Cookie(&cookie)
+
+	data := map[string]interface{}{
+		"user":  user,
+		"token": t,
+	}
+
 	return ctx.JSON(model.Response{
 		Success: true,
 		Status:  fiber.StatusOK,
 		Message: "login success",
-		Data:    user,
+		Data:    data,
 	})
 }

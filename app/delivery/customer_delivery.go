@@ -6,6 +6,7 @@ import (
 	"gis/domain/model"
 	"gis/domain/service"
 	"gis/helper"
+	"gis/middleware"
 	_ "image/jpeg"
 	_ "image/png"
 	"strconv"
@@ -25,7 +26,7 @@ func NewCustomerDelivery(router fiber.Router, service service.CustomerServiceInt
 	}
 
 	router.Post("/customer", handler.Create)
-	router.Get("/customer", handler.FindAll)
+	router.Get("/customer", middleware.Authentication, handler.FindAll)
 	router.Get("/customer/:id", handler.FindOne)
 }
 
