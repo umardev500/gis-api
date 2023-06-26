@@ -25,6 +25,7 @@ func main() {
 	api := app.Group("api")
 
 	injector.NewCustomerInjector(api, db)
+	injector.NewAuthInjector(api, db)
 
 	log.Fatal(app.Listen(port))
 }

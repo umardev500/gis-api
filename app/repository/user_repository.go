@@ -13,8 +13,10 @@ type userRepository struct {
 	customerCollection *mongo.Collection
 }
 
-func NewUserRepository() repository.UserRepositoryInterface {
-	return &userRepository{}
+func NewUserRepository(db *mongo.Database) repository.UserRepositoryInterface {
+	return &userRepository{
+		customerCollection: db.Collection("users"),
+	}
 }
 
 func (u *userRepository) FindOne(ctx context.Context, filter bson.M) (*model.UserModel, error) {
