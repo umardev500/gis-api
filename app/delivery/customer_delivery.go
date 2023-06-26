@@ -9,10 +9,13 @@ import (
 	"gis/middleware"
 	_ "image/jpeg"
 	_ "image/png"
+	"os"
 	"strconv"
 	"time"
 
+	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
+	_ "github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -24,10 +27,23 @@ func NewCustomerDelivery(router fiber.Router, service service.CustomerServiceInt
 	handler := &customerDelivery{
 		service: service,
 	}
+	secret := os.Getenv("SECRET")
 
-	router.Post("/customer", handler.Create)
-	router.Get("/customer", middleware.Authentication, handler.FindAll)
-	router.Get("/customer/:id", handler.FindOne)
+	router = router.Group("customer")
+	router.Use(jwtware.New(jwtware.Config{
+		SigningKey: jwtware.SigningKey{Key: []byte(secret)},
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			return c.JSON(model.Response{
+				Success: false,
+				Status:  fiber.StatusBadRequest,
+				Error:   err.Error(),
+			})
+		},
+	}))
+
+	router.Post("/", handler.Create)
+	router.Get("/", middleware.Authentication, handler.FindAll)
+	router.Get("/:id", handler.FindOne)
 }
 
 func (c *customerDelivery) Create(ctx *fiber.Ctx) error {
