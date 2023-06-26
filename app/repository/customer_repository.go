@@ -37,6 +37,12 @@ func (c *customerRepository) FindAll(ctx context.Context, findMeta *model.FindMe
 		if findMeta.PerPage != 0 {
 			findOptions.SetLimit(findMeta.PerPage)
 		}
+		if findMeta.Order != "" && (findMeta.Order == "desc" || findMeta.Order == "asc") {
+			if findMeta.Order == "desc" {
+				fmt.Println("order:", findMeta.Order)
+				findOptions.SetSort(bson.M{"createdAt": -1})
+			}
+		}
 	}
 
 	cur, err := c.customerCollection.Find(ctx, filter, findOptions)

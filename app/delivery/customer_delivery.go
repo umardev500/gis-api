@@ -65,8 +65,10 @@ func (c *customerDelivery) FindAll(ctx *fiber.Ctx) error {
 	var response model.Response
 
 	perPage, _ := strconv.Atoi(ctx.Query("per_page", "0"))
+	order := ctx.Query("order")
 	findMeta := model.FindMetaRequest{
 		PerPage: int64(perPage),
+		Order:   order,
 	}
 	customers, meta, err := c.service.FindAll(contx, findMeta)
 	if err != nil {
