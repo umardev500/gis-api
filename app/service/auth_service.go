@@ -21,7 +21,7 @@ func NewAuthService(userRepo repository.UserRepositoryInterface) service.AuthSer
 }
 
 func (a *authService) Login(ctx context.Context, authCreds model.AuthCreds) (*model.UserModel, error) {
-	filter := bson.M{}
+	filter := bson.M{"username": authCreds.Username, "password": authCreds.Password}
 	user, err := a.userRepo.FindOne(ctx, filter)
 	if err != nil {
 		fmt.Println(err)
