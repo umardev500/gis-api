@@ -2,5 +2,4 @@
 go.sum
 vendor
 thunder-tests
-go.mod
 tmp
