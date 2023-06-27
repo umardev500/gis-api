@@ -18,10 +18,14 @@ jobs:
         with:
           go-version: 1.20.4
 
+      - name: Install dependencies
+        run: go mod tidy
+
       - name: Build Go application
-        run: |
-          go mod tidy
-          go build -o main .
+        run: go build -o main .
+
+      - name: Listing
+        run: ls -la
     
       - name: Deploy
         uses: appleboy/ssh-action@master
