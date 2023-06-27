@@ -22,7 +22,7 @@ jobs:
         run: go mod tidy
 
       - name: Build Go application
-        run: go build .
+        run: go build -o main
 
       - name: Listing
         run: ls -la
