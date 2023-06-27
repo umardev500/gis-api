@@ -2,7 +2,6 @@ package delivery
 
 import (
 	"context"
-	"fmt"
 	"gis/domain/model"
 	"gis/domain/service"
 	"gis/helper"
@@ -56,23 +55,24 @@ func (c *customerDelivery) Create(ctx *fiber.Ctx) error {
 	if err := ctx.BodyParser(&customer); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(model.Response{
 			Success: false,
+			Status:  fiber.StatusInternalServerError,
 			Error:   "Failed to decode customer",
 		})
 	}
-
-	fmt.Println("customer", customer)
 
 	// call service
 	err := c.service.Create(contx, customer)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(model.Response{
 			Success: false,
+			Status:  fiber.StatusInternalServerError,
 			Error:   "Internal server error",
 		})
 	}
 
 	return ctx.JSON(model.Response{
 		Success: true,
+		Status:  fiber.StatusOK,
 		Message: "Customer successfuly added",
 	})
 }
@@ -93,6 +93,7 @@ func (c *customerDelivery) FindAll(ctx *fiber.Ctx) error {
 	if err != nil {
 		response = model.Response{
 			Success: false,
+			Status:  fiber.StatusInternalServerError,
 			Error:   err.Error(),
 		}
 		return helper.APIResponse(ctx, fiber.StatusInternalServerError, response)
@@ -100,6 +101,7 @@ func (c *customerDelivery) FindAll(ctx *fiber.Ctx) error {
 
 	response = model.Response{
 		Success: true,
+		Status:  fiber.StatusOK,
 		Message: "get all customers",
 		Data:    customers,
 		Meta:    &meta,
@@ -124,6 +126,7 @@ func (c *customerDelivery) FindAllNearest(ctx *fiber.Ctx) error {
 	if err != nil {
 		response = model.Response{
 			Success: false,
+			Status:  fiber.StatusInternalServerError,
 			Error:   err.Error(),
 		}
 		return helper.APIResponse(ctx, fiber.StatusInternalServerError, response)
@@ -131,6 +134,7 @@ func (c *customerDelivery) FindAllNearest(ctx *fiber.Ctx) error {
 
 	response = model.Response{
 		Success: true,
+		Status:  fiber.StatusOK,
 		Message: "get all customers",
 		Data:    customers,
 		Meta:    &meta,
@@ -153,13 +157,15 @@ func (c *customerDelivery) FindOne(ctx *fiber.Ctx) error {
 		if err == mongo.ErrNoDocuments {
 			response = model.Response{
 				Success: true,
+				Status:  fiber.StatusNotFound,
 				Message: "get customer by id",
 			}
-			return ctx.JSON(response)
+			return ctx.Status(fiber.StatusNotFound).JSON(response)
 		}
 		// response for exact error
 		response = model.Response{
 			Success: false,
+			Status:  fiber.StatusInternalServerError,
 			Error:   err.Error(),
 		}
 		return helper.APIResponse(ctx, fiber.StatusInternalServerError, response)
@@ -167,6 +173,7 @@ func (c *customerDelivery) FindOne(ctx *fiber.Ctx) error {
 
 	response = model.Response{
 		Success: true,
+		Status:  fiber.StatusOK,
 		Message: "get customer by id",
 		Data:    customer,
 	}

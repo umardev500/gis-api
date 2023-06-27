@@ -36,6 +36,7 @@ func (a *authDelivery) Login(ctx *fiber.Ctx) error {
 	if err := ctx.BodyParser(&authCreds); err != nil {
 		response = model.Response{
 			Success: false,
+			Status:  fiber.StatusInternalServerError,
 			Error:   err.Error(),
 		}
 		return helper.APIResponse(ctx, fiber.StatusInternalServerError, response)
