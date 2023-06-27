@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,20 +22,39 @@ jobs:
         run: go mod tidy
 
       - name: Build Go application
-        run: go build -o main .
+        run: go build .
 
       - name: Listing
         run: ls -la
+
+  deploy:
+  name: Deploy
+  needs: build
+  runs-on: ubuntu-latest
+
+  steps:
+    - name: Copy file
+      id: copy-file
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        source: ./main
+        target: gis-api
+
+    - name: Deploy
+      needs: copy-file
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          mv main gis-api
+          cd gis-api && mv .env.example .env
+          cd gis-api && git pull origin main
+          docker compose build
+          docker compose up -d
+
     
-      - name: Deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            mv main gis-api
-            cd gis-api && mv .env.example .env
-            cd gis-api && git pull origin main
-            docker compose build
-            docker compose up -d
