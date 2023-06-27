@@ -40,3 +40,20 @@ func (c *customerService) FindOne(ctx context.Context, id string) (*model.Custom
 
 	return customer, err
 }
+
+func (c *customerService) FindAllNearest(ctx context.Context, findMeta model.FindMetaRequest) ([]model.CustomerModel, model.Meta, error) {
+	filter := bson.M{
+		"location": bson.M{
+			"$near": bson.M{
+				"$geometry": bson.M{
+					"type":        "Point",
+					"coordinates": []float64{105.87665435422802, -6.5186988908316055},
+				},
+			},
+		},
+	}
+
+	customers, meta, err := c.repo.FindAll(ctx, &findMeta, filter)
+
+	return customers, meta, err
+}

@@ -43,6 +43,8 @@ func NewCustomerDelivery(router fiber.Router, service service.CustomerServiceInt
 
 	router.Post("/", handler.Create)
 	router.Get("/", middleware.Authentication, handler.FindAll)
+	// get nearest
+	router.Get("/near", middleware.Authentication, handler.FindAllNearest)
 	router.Get("/:id", handler.FindOne)
 }
 
@@ -88,6 +90,37 @@ func (c *customerDelivery) FindAll(ctx *fiber.Ctx) error {
 		Order:   order,
 	}
 	customers, meta, err := c.service.FindAll(contx, findMeta)
+	if err != nil {
+		response = model.Response{
+			Success: false,
+			Error:   err.Error(),
+		}
+		return helper.APIResponse(ctx, fiber.StatusInternalServerError, response)
+	}
+
+	response = model.Response{
+		Success: true,
+		Message: "get all customers",
+		Data:    customers,
+		Meta:    &meta,
+	}
+
+	return ctx.JSON(response)
+}
+
+func (c *customerDelivery) FindAllNearest(ctx *fiber.Ctx) error {
+	contx, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
+	defer cancel()
+
+	var response model.Response
+
+	perPage, _ := strconv.Atoi(ctx.Query("per_page", "0"))
+	order := ctx.Query("order")
+	findMeta := model.FindMetaRequest{
+		PerPage: int64(perPage),
+		Order:   order,
+	}
+	customers, meta, err := c.service.FindAllNearest(contx, findMeta)
 	if err != nil {
 		response = model.Response{
 			Success: false,
