@@ -6,6 +6,8 @@ import (
 	"gis/domain/repository"
 	"gis/domain/service"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type customerService struct {
@@ -27,7 +29,8 @@ func (c *customerService) Create(ctx context.Context, payload model.CustomerRequ
 }
 
 func (c *customerService) FindAll(ctx context.Context, findMeta model.FindMetaRequest) ([]model.CustomerModel, model.Meta, error) {
-	customers, meta, err := c.repo.FindAll(ctx, &findMeta)
+	filter := bson.M{}
+	customers, meta, err := c.repo.FindAll(ctx, &findMeta, filter)
 
 	return customers, meta, err
 }

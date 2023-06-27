@@ -30,8 +30,7 @@ func (c *customerRepository) Create(ctx context.Context, payload model.CustomerR
 	return nil
 }
 
-func (c *customerRepository) FindAll(ctx context.Context, findMeta *model.FindMetaRequest) ([]model.CustomerModel, model.Meta, error) {
-	filter := bson.M{}
+func (c *customerRepository) FindAll(ctx context.Context, findMeta *model.FindMetaRequest, filter bson.M) ([]model.CustomerModel, model.Meta, error) {
 	findOptions := options.Find()
 	if findMeta != nil {
 		if findMeta.PerPage != 0 {
