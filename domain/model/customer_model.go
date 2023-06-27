@@ -24,8 +24,7 @@ type CustomerModel struct {
 	Province    Origin   `bson:"province" json:"province"`
 	City        Regency  `bson:"city" json:"city"`
 	District    District `bson:"district" json:"district"`
-	Longitude   float64  `bson:"longitude" json:"longitude"`
-	Latitude    float64  `bson:"latitude" json:"latitude"`
+	Location    Location `bson:"location" json:"location"`
 	Picture     string   `bson:"picture" json:"picture"`
 	Thumbnail   string   `bson:"thumbnail" json:"thumbnail"`
 	Description string   `bson:"description" json:"description"`
@@ -38,8 +37,7 @@ type CustomerRequestPayload struct {
 	Province    Origin   `bson:"province"`
 	City        Regency  `bson:"city"`
 	District    District `bson:"district"`
-	Longitude   float64  `bson:"longitude"`
-	Latitude    float64  `bson:"latitude"`
+	Location    Location `bson:"location" json:"location"`
 	Picture     string   `bson:"picture"`
 	Thumbnail   string   `bson:"thumbnail"`
 	Description string   `bson:"description"`
