@@ -10,32 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.20.4
-
-      - name: Install dependencies
-        run: go mod tidy
-
-      - name: Build Go application
-        run: go build -o main
-
-      - name: Listing
-        run: ls -la
-
-      - name: Copy file
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: "main"
-          target: "~/gis-api"
-
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
@@ -43,9 +17,8 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            mv main gis-api
-            cd gis-api && mv .env.example .env
             cd gis-api && git pull origin main
+            cd gis-api && mv .env.example .env
             docker compose build
             docker compose up -d
     
