@@ -14,10 +14,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN go mod tidy
-
-RUN CGO_ENABLED=0 go build -o main
-
 EXPOSE 5000
 
 CMD [ "./main" ]

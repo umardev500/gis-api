@@ -10,6 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.20
+
+      - name: Build Go application
+        run: go build -o main .
+    
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
@@ -17,6 +28,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            mv main gis-api
             cd gis-api && mv .env.example .env
             cd gis-api && git pull origin main
             docker compose build
