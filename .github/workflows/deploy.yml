@@ -16,4 +16,5 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          script: ../../deploy.sh
+          script: |
+            git pull origin main
