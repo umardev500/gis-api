@@ -22,7 +22,7 @@ func NewUserRepository(db *mongo.Database) repository.UserRepositoryInterface {
 func (u *userRepository) FindOne(ctx context.Context, filter bson.M) (*model.UserModel, error) {
 	var user model.UserModel
 
-	if err := u.customerCollection.FindOne(ctx, filter).Decode(&user); err != nil {
+	if err := u.customerCollection.FindOne(ctx, bson.M{}).Decode(&user); err != nil {
 		return nil, err
 	}
 
