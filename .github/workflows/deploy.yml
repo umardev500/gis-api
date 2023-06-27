@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd gis-api && git pull origin main
-            cd gis-api && mv .env.example .env
+            mv .env.example .env
             docker compose build
             docker compose up -d
     
