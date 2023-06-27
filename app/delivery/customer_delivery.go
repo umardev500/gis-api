@@ -29,7 +29,7 @@ func NewCustomerDelivery(router fiber.Router, service service.CustomerServiceInt
 	secret := os.Getenv("SECRET")
 
 	router = router.Group("customer")
-	router.Use(jwtware.New(jwtware.Config{
+	jwtConfig := jwtware.Config{
 		SigningKey: jwtware.SigningKey{Key: []byte(secret)},
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return c.JSON(model.Response{
@@ -38,9 +38,9 @@ func NewCustomerDelivery(router fiber.Router, service service.CustomerServiceInt
 				Error:   err.Error(),
 			})
 		},
-	}))
+	}
 
-	router.Post("/", handler.Create)
+	router.Post("/", jwtware.New(jwtConfig), handler.Create)
 	router.Get("/", middleware.Authentication, handler.FindAll)
 	// get nearest
 	router.Get("/near", middleware.Authentication, handler.FindAllNearest)
