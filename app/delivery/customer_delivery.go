@@ -66,7 +66,7 @@ func (c *customerDelivery) Create(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(model.Response{
 			Success: false,
 			Status:  fiber.StatusInternalServerError,
-			Error:   "Internal server error",
+			Error:   err.Error(),
 		})
 	}
 
