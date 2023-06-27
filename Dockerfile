@@ -18,10 +18,6 @@ RUN go mod tidy
 
 RUN go build -o main
 
-COPY main .
-
-RUN ls -la
-
 EXPOSE 5000
 
-CMD [ "main" ]
+ENTRYPOINT [ "/app/main" ]
