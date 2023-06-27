@@ -28,7 +28,7 @@ jobs:
         run: ls -la
 
   deploy:
-    name: Deploy
+    name: Deployment
     needs: build
     runs-on: ubuntu-latest
 
