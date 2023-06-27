@@ -17,4 +17,4 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            git pull origin main
+            cd gis-api && git pull origin main
