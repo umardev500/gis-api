@@ -18,6 +18,8 @@ RUN go mod tidy
 
 RUN go build -o main
 
+COPY main main
+
 EXPOSE 5000
 
 CMD [ "main" ]
