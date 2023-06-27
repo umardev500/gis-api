@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: test
+        run: |
+          echo ${{ secrets.SSH_USER }}
+          echo ${{ secrets.SSH_KEY }}
+          
       - name: Checkout repository
         uses: actions/checkout@v2
 
