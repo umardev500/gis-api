@@ -83,6 +83,11 @@ func (c *customerDelivery) FindAll(ctx *fiber.Ctx) error {
 
 	var response model.Response
 
+	isNearest, _ := strconv.ParseBool(ctx.Query("near", "false"))
+	if isNearest {
+		return c.FindAllNearest(ctx)
+	}
+
 	perPage, _ := strconv.Atoi(ctx.Query("per_page", "0"))
 	order := ctx.Query("order")
 	findMeta := model.FindMetaRequest{
