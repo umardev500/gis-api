@@ -43,9 +43,34 @@ func NewCustomerDelivery(router fiber.Router, service service.CustomerServiceInt
 	router.Post("/", jwtware.New(jwtConfig), handler.Create)
 	router.Get("/", handler.FindAll)
 	router.Put("/", handler.Update)
+	router.Delete("/:id", handler.Delete)
 	// get nearest
 	router.Get("/near", middleware.Authentication, handler.FindAllNearest)
 	router.Get("/:id", handler.FindOne)
+}
+
+func (c *customerDelivery) Delete(ctx *fiber.Ctx) error {
+	contx, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
+	defer cancel()
+
+	customerId, _ := strconv.Atoi(ctx.Params("id", "0"))
+
+	err := c.service.Delete(contx, int64(customerId))
+
+	if err != nil {
+
+		return ctx.Status(fiber.StatusBadRequest).JSON(model.Response{
+			Success: false,
+			Status:  fiber.StatusInternalServerError,
+			Error:   "Failed to delete customer",
+		})
+	}
+
+	return ctx.JSON(model.Response{
+		Success: true,
+		Status:  fiber.StatusOK,
+		Message: "Customer successfuly deleted",
+	})
 }
 
 func (c *customerDelivery) Update(ctx *fiber.Ctx) error {
@@ -66,8 +91,20 @@ func (c *customerDelivery) Update(ctx *fiber.Ctx) error {
 	helper.RemoveZero(&customer, &newCustomer)
 
 	err := c.service.Update(contx, newCustomer)
+	if err != nil {
 
-	return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(model.Response{
+			Success: false,
+			Status:  fiber.StatusInternalServerError,
+			Error:   "Failed to update customer",
+		})
+	}
+
+	return ctx.JSON(model.Response{
+		Success: true,
+		Status:  fiber.StatusOK,
+		Message: "Customer successfuly updated",
+	})
 }
 
 func (c *customerDelivery) Create(ctx *fiber.Ctx) error {

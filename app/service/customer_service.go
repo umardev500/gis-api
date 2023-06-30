@@ -20,6 +20,11 @@ func NewCustomerService(repo repository.CustomerRepositoryInterface) service.Cus
 	}
 }
 
+func (c *customerService) Delete(ctx context.Context, customerId int64) error {
+	err := c.repo.Delete(ctx, customerId)
+	return err
+}
+
 func (c *customerService) Update(ctx context.Context, payload bson.M) error {
 	err := c.repo.Update(ctx, payload)
 

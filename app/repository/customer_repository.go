@@ -21,6 +21,16 @@ func NewCustomerRepository(db *mongo.Database) repository.CustomerRepositoryInte
 	}
 }
 
+func (c *customerRepository) Delete(ctx context.Context, customerID int64) error {
+	filter := bson.M{"id": customerID}
+	_, err := c.customerCollection.DeleteOne(ctx, filter)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (c *customerRepository) Update(ctx context.Context, payload bson.M) error {
 	filter := bson.M{"id": 1}
 	update := bson.M{"$set": payload}
