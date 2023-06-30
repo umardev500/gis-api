@@ -32,6 +32,7 @@ type CustomerModel struct {
 }
 
 type CustomerRequestPayload struct {
+	ID          int64    `bson:"id" json:"id"`
 	Name        string   `bson:"name"`
 	Phone       string   `bson:"phone"`
 	Province    Origin   `bson:"province"`

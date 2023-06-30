@@ -33,7 +33,9 @@ func (c *customerService) Update(ctx context.Context, payload bson.M) error {
 
 func (c *customerService) Create(ctx context.Context, payload model.CustomerRequestPayload) error {
 	newPayload := payload
-	newPayload.CreatedAt = time.Now().Unix()
+	now := time.Now()
+	newPayload.ID = now.UnixMilli()
+	newPayload.CreatedAt = now.Unix()
 	err := c.repo.Create(ctx, newPayload)
 
 	return err
