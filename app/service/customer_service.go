@@ -5,6 +5,7 @@ import (
 	"gis/domain/model"
 	"gis/domain/repository"
 	"gis/domain/service"
+	"strconv"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -34,7 +35,7 @@ func (c *customerService) Update(ctx context.Context, payload bson.M) error {
 func (c *customerService) Create(ctx context.Context, payload model.CustomerRequestPayload) error {
 	newPayload := payload
 	now := time.Now()
-	newPayload.ID = now.UnixMilli()
+	newPayload.ID = strconv.Itoa(int(now.UnixMilli()))
 	newPayload.CreatedAt = now.Unix()
 	err := c.repo.Create(ctx, newPayload)
 

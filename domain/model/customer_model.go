@@ -18,7 +18,7 @@ type District struct {
 }
 
 type CustomerModel struct {
-	ID          int64    `bson:"id" json:"id"`
+	ID          string   `bson:"id" json:"id"`
 	Name        string   `bson:"name" json:"name"`
 	Phone       string   `bson:"phone" json:"phone"`
 	Province    Origin   `bson:"province" json:"province"`
@@ -32,7 +32,7 @@ type CustomerModel struct {
 }
 
 type CustomerRequestPayload struct {
-	ID          int64    `bson:"id" json:"id"`
+	ID          string   `bson:"id" json:"id"`
 	Name        string   `bson:"name"`
 	Phone       string   `bson:"phone"`
 	Province    Origin   `bson:"province"`
