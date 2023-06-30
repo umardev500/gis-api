@@ -31,8 +31,8 @@ func (c *customerRepository) Delete(ctx context.Context, customerID string) erro
 	return nil
 }
 
-func (c *customerRepository) Update(ctx context.Context, payload bson.M) error {
-	filter := bson.M{"id": "1"}
+func (c *customerRepository) Update(ctx context.Context, payload bson.M, customerID string) error {
+	filter := bson.M{"id": customerID}
 	update := bson.M{"$set": payload}
 
 	_, err := c.customerCollection.UpdateOne(ctx, filter, update)

@@ -9,7 +9,7 @@ import (
 
 type CustomerServiceInterface interface {
 	Delete(ctx context.Context, customerId string) error
-	Update(ctx context.Context, payload bson.M) error
+	Update(ctx context.Context, payload bson.M, customerID string) error
 	Create(ctx context.Context, payload model.CustomerRequestPayload) error
 	FindOne(ctx context.Context, id string) (*model.CustomerModel, error)
 	FindAll(ctx context.Context, findMeta model.FindMetaRequest) ([]model.CustomerModel, model.Meta, error)

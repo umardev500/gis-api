@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"context"
+	"fmt"
 	"gis/domain/model"
 	"gis/domain/service"
 	"gis/helper"
@@ -42,7 +43,7 @@ func NewCustomerDelivery(router fiber.Router, service service.CustomerServiceInt
 
 	router.Post("/", jwtware.New(jwtConfig), handler.Create)
 	router.Get("/", handler.FindAll)
-	router.Put("/", handler.Update)
+	router.Put("/:id", handler.Update)
 	router.Delete("/:id", handler.Delete)
 	// get nearest
 	router.Get("/near", middleware.Authentication, handler.FindAllNearest)
@@ -77,6 +78,8 @@ func (c *customerDelivery) Update(ctx *fiber.Ctx) error {
 	contx, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 
+	id := ctx.Params("id", "0")
+
 	var customer model.CustomerRequestPayload
 	if err := ctx.BodyParser(&customer); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(model.Response{
@@ -89,8 +92,9 @@ func (c *customerDelivery) Update(ctx *fiber.Ctx) error {
 	var newCustomer = make(map[string]interface{})
 
 	helper.RemoveZero(&customer, &newCustomer)
+	fmt.Println(newCustomer)
 
-	err := c.service.Update(contx, newCustomer)
+	err := c.service.Update(contx, newCustomer, id)
 	if err != nil {
 
 		return ctx.Status(fiber.StatusBadRequest).JSON(model.Response{

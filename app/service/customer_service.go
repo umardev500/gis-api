@@ -26,8 +26,8 @@ func (c *customerService) Delete(ctx context.Context, customerId string) error {
 	return err
 }
 
-func (c *customerService) Update(ctx context.Context, payload bson.M) error {
-	err := c.repo.Update(ctx, payload)
+func (c *customerService) Update(ctx context.Context, payload bson.M, customerID string) error {
+	err := c.repo.Update(ctx, payload, customerID)
 
 	return err
 }
