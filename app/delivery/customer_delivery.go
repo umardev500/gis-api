@@ -53,9 +53,9 @@ func (c *customerDelivery) Delete(ctx *fiber.Ctx) error {
 	contx, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 
-	customerId, _ := strconv.Atoi(ctx.Params("id", "0"))
+	customerId := ctx.Params("id", "0")
 
-	err := c.service.Delete(contx, int64(customerId))
+	err := c.service.Delete(contx, customerId)
 
 	if err != nil {
 

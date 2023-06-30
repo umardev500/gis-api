@@ -8,7 +8,7 @@ import (
 )
 
 type CustomerRepositoryInterface interface {
-	Delete(ctx context.Context, customerID int64) error
+	Delete(ctx context.Context, customerID string) error
 	Update(ctx context.Context, payload bson.M) error
 	Create(ctx context.Context, payload model.CustomerRequestPayload) error
 	FindOne(ctx context.Context, id string) (*model.CustomerModel, error)
