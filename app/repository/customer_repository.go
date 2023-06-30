@@ -21,6 +21,20 @@ func NewCustomerRepository(db *mongo.Database) repository.CustomerRepositoryInte
 	}
 }
 
+func (c *customerRepository) Update(ctx context.Context, payload bson.M) error {
+	filter := bson.M{"id": 1}
+	update := bson.M{"$set": payload}
+
+	_, err := c.customerCollection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return err
+	}
+
+	// fmt.Println(updateResult)
+
+	return nil
+}
+
 func (c *customerRepository) Create(ctx context.Context, payload model.CustomerRequestPayload) error {
 	_, err := c.customerCollection.InsertOne(ctx, payload)
 	if err != nil {

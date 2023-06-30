@@ -20,6 +20,12 @@ func NewCustomerService(repo repository.CustomerRepositoryInterface) service.Cus
 	}
 }
 
+func (c *customerService) Update(ctx context.Context, payload bson.M) error {
+	err := c.repo.Update(ctx, payload)
+
+	return err
+}
+
 func (c *customerService) Create(ctx context.Context, payload model.CustomerRequestPayload) error {
 	newPayload := payload
 	newPayload.CreatedAt = time.Now().Unix()

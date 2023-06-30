@@ -41,10 +41,33 @@ func NewCustomerDelivery(router fiber.Router, service service.CustomerServiceInt
 	}
 
 	router.Post("/", jwtware.New(jwtConfig), handler.Create)
-	router.Get("/", middleware.Authentication, handler.FindAll)
+	router.Get("/", handler.FindAll)
+	router.Put("/", handler.Update)
 	// get nearest
 	router.Get("/near", middleware.Authentication, handler.FindAllNearest)
 	router.Get("/:id", handler.FindOne)
+}
+
+func (c *customerDelivery) Update(ctx *fiber.Ctx) error {
+	contx, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
+	defer cancel()
+
+	var customer model.CustomerRequestPayload
+	if err := ctx.BodyParser(&customer); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(model.Response{
+			Success: false,
+			Status:  fiber.StatusInternalServerError,
+			Error:   "Failed to decode customer",
+		})
+	}
+
+	var newCustomer = make(map[string]interface{})
+
+	helper.RemoveZero(&customer, &newCustomer)
+
+	err := c.service.Update(contx, newCustomer)
+
+	return err
 }
 
 func (c *customerDelivery) Create(ctx *fiber.Ctx) error {
