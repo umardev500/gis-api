@@ -2,6 +2,7 @@ package config
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -15,6 +16,8 @@ func NewConn() *mongo.Client {
 	defer cancel()
 
 	dsn := os.Getenv("DSN")
+
+	fmt.Println("dsn:", dsn)
 
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn).SetServerAPIOptions(serverAPI))
