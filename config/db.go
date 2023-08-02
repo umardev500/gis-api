@@ -16,7 +16,8 @@ func NewConn() *mongo.Client {
 
 	dsn := os.Getenv("DSN")
 
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn))
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn).SetServerAPIOptions(serverAPI))
 	if err != nil {
 		log.Fatal(err)
 	}
