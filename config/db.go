@@ -2,7 +2,6 @@ package config
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -12,15 +11,12 @@ import (
 )
 
 func NewConn() *mongo.Client {
-	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	dsn := os.Getenv("DSN")
 
-	fmt.Println("dsn:", dsn)
-
-	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn).SetServerAPIOptions(serverAPI))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn))
 	if err != nil {
 		log.Fatal(err)
 	}
