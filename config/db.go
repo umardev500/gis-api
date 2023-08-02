@@ -14,7 +14,7 @@ func NewConn() *mongo.Client {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	dsn := os.Getenv("PORT")
+	dsn := os.Getenv("DSN")
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn))
 	if err != nil {
